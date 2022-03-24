@@ -1,38 +1,8 @@
-From 03a3990e83a94666abb5a27447fa1b67076b0e08 Mon Sep 17 00:00:00 2001
-From: Alexander Hofbauer <alex@derhofbauer.at>
-Date: Fri, 21 May 2021 10:35:05 +0200
-Subject: [PATCH] Patch for license
-
----
- Common/sources/commondefines.js          |  4 ++--
- Common/sources/constants.js              |  2 +-
- Common/sources/license.js                | 16 ++++++++--------
- DocService/sources/DocsCoServer.js       |  4 ++--
- DocService/sources/server.js             |  1 -
- FileConverter/sources/convertermaster.js |  1 -
- Makefile                                 |  2 +-
- 7 files changed, 14 insertions(+), 16 deletions(-)
-
-diff --git a/Common/sources/commondefines.js b/Common/sources/commondefines.js
-index ec6a870..d1f21c2 100644
---- a/Common/sources/commondefines.js
-+++ b/Common/sources/commondefines.js
-@@ -1035,8 +1035,8 @@ const c_oAscUnlockRes = {
-   Empty: 2
- };
- 
--const buildVersion = '4.1.2';
--const buildNumber = 37;
-+const buildVersion = '6.3.1';
-+const buildNumber = 32;
- 
- exports.TaskQueueData = TaskQueueData;
- exports.CMailMergeSendData = CMailMergeSendData;
 diff --git a/Common/sources/constants.js b/Common/sources/constants.js
-index f976ed9..e5b91fd 100644
+index a6b553b..336d069 100644
 --- a/Common/sources/constants.js
 +++ b/Common/sources/constants.js
-@@ -70,7 +70,7 @@ exports.LICENSE_RESULT = {
+@@ -74,7 +74,7 @@ exports.LICENSE_RESULT = {
    ExpiredLimited: 11
  };
  
@@ -42,71 +12,64 @@ index f976ed9..e5b91fd 100644
  
  exports.AVS_OFFICESTUDIO_FILE_UNKNOWN =  0x0000;
 diff --git a/Common/sources/license.js b/Common/sources/license.js
-index ea257bd..5aefbf1 100644
+index 3f84ab7..06572af 100644
 --- a/Common/sources/license.js
 +++ b/Common/sources/license.js
-@@ -34,7 +34,7 @@
- 
- const constants = require('./constants');
- 
--const buildDate = '6/29/2016';
-+const buildDate = '2021-06-06T14:34:00.000Z';
- const oBuildDate = new Date(buildDate);
- 
- exports.readLicense = function*() {
-@@ -43,18 +43,18 @@ exports.readLicense = function*() {
+@@ -45,19 +45,19 @@ exports.readLicense = function*() {
  		count: 1,
  		type: c_LR.Success,
  		light: false,
 -		packageType: constants.PACKAGE_TYPE_OS,
 +		packageType: constants.PACKAGE_TYPE_I,
  		mode: constants.LICENSE_MODE.None,
- 		branding: false,
+-		branding: false,
++		branding: true,
  		connections: constants.LICENSE_CONNECTIONS,
 -		customization: false,
+-		usersCount: 0,
 +		customization: true,
- 		usersCount: 0,
--		usersExpire: constants.LICENSE_EXPIRE_USERS_ONE_DAY,
++		usersCount: constants.LICENSE_CONNECTIONS,
+ 		usersExpire: constants.LICENSE_EXPIRE_USERS_ONE_DAY,
 -		hasLicense: false,
 -		plugins: false,
-+		usersExpire: new Date("2099-01-01T23:59:59.000Z").getTime() / 1000,
 +		hasLicense: true,
 +		plugins: true,
  		buildDate: oBuildDate,
+ 		startDate: startDate,
 -		endDate: null
-+		endDate: "2099-01-01T23:59:59.000Z"
- 	};
++		endDate: new Date("2099-01-01T23:59:59.000Z")
+ 	}, null];
  };
  
 -exports.packageType = constants.PACKAGE_TYPE_OS;
 +exports.packageType = constants.PACKAGE_TYPE_I;
 diff --git a/DocService/sources/DocsCoServer.js b/DocService/sources/DocsCoServer.js
-index 0365510..ee25b0c 100644
+index 8e56486..161be23 100644
 --- a/DocService/sources/DocsCoServer.js
 +++ b/DocService/sources/DocsCoServer.js
-@@ -163,7 +163,7 @@ let connections = []; // Активные соединения
+@@ -166,7 +166,7 @@ let connections = []; // Активные соединения
  let lockDocumentsTimerId = {};//to drop connection that can't unlockDocument
  let pubsub;
  let queue;
 -let licenseInfo = {type: constants.LICENSE_RESULT.Error, light: false, branding: false, customization: false, plugins: false};
-+let licenseInfo = license.readLicense().next().value;
++let licenseInfo = license.readLicense().next().value[0];
+ let licenseOriginal = null;
  let shutdownFlag = false;
  let expDocumentsStep = gc.getCronStep(cfgExpDocumentsCron);
- 
-@@ -3094,7 +3094,7 @@ exports.install = function(server, callbackFunction) {
+@@ -3259,7 +3259,7 @@ exports.install = function(server, callbackFunction) {
    });
  };
- exports.setLicenseInfo = function(data) {
+ exports.setLicenseInfo = function(data, original ) {
 -  licenseInfo = data;
-+  logger.debug('Not updating license info', data)
++  logger.debug('Not updating license info', data);
+   licenseOriginal = original;
  };
  exports.getLicenseInfo = function() {
-   return licenseInfo;
 diff --git a/DocService/sources/server.js b/DocService/sources/server.js
-index b623759..29574bd 100644
+index b03e0d0..91e61c2 100644
 --- a/DocService/sources/server.js
 +++ b/DocService/sources/server.js
-@@ -129,7 +129,6 @@ try {
+@@ -137,7 +137,6 @@ try {
  } catch (e) {
  	logger.warn('Failed to subscribe to plugin folder updates. When changing the list of plugins, you must restart the server. https://nodejs.org/docs/latest/api/fs.html#fs_availability');
  }
@@ -115,7 +78,7 @@ index b623759..29574bd 100644
  
  // Если захочется использовать 'development' и 'production',
 diff --git a/FileConverter/sources/convertermaster.js b/FileConverter/sources/convertermaster.js
-index c246bb8..9fe3d41 100644
+index 2c4526f..ec07464 100644
 --- a/FileConverter/sources/convertermaster.js
 +++ b/FileConverter/sources/convertermaster.js
 @@ -85,7 +85,6 @@ if (cluster.isMaster) {
@@ -127,18 +90,15 @@ index c246bb8..9fe3d41 100644
  } else {
    const converter = require('./converter');
 diff --git a/Makefile b/Makefile
-index 40bf93e..1df9c10 100644
+index e8e1308..23f7e2e 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -83,7 +83,7 @@ DEBUG = $(BRANDING_DIR)/debug.js
+@@ -87,7 +87,7 @@ DEBUG = $(BRANDING_DIR)/debug.js
  .PHONY: all clean install uninstall build-date
  
  .NOTPARALLEL:
--all: $(SPELLCHECKER_DICTIONARIES) $(TOOLS) $(SCHEMA) $(CORE_FONTS) $(LICENSE) $(WELCOME) $(INFO) build-date
+-all: $(SPELLCHECKER_DICTIONARIES) $(TOOLS) $(SCHEMA) $(CORE_FONTS) $(DOCUMENT_TEMPLATES) $(LICENSE) $(WELCOME) $(INFO) build-date
 +all: $(SCHEMA) $(LICENSE) $(WELCOME) $(INFO) build-date
  
  build-date: $(GRUNT_FILES)
  	sed "s|\(const buildVersion = \).*|\1'${PRODUCT_VERSION}';|" -i $(COMMON_DEFINES_JS)
--- 
-2.31.1
-
