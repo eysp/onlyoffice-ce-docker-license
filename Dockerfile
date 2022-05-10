@@ -48,3 +48,10 @@ ARG oo_root
 #server
 COPY --from=build-stage /build/converter  ${oo_root}/server/FileConverter/converter
 COPY --from=build-stage /build/docservice ${oo_root}/server/DocService/docservice
+
+# Restore basic editing on mobile (no editing menu/features).
+RUN sed -si \
+  's/isSupportEditFeature=function(){return!1}/isSupportEditFeature=function(){return 1}/g' \
+  ${oo_root}/web-apps/apps/documenteditor/mobile/dist/js/app.js \
+  ${oo_root}/web-apps/apps/presentationeditor/mobile/dist/js/app.js \
+  ${oo_root}/web-apps/apps/spreadsheeteditor/mobile/dist/js/app.js
