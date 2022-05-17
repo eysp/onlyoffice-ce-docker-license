@@ -1,8 +1,8 @@
 diff --git a/Common/sources/constants.js b/Common/sources/constants.js
-index a6b553b..336d069 100644
+index 0663ead..490582a 100644
 --- a/Common/sources/constants.js
 +++ b/Common/sources/constants.js
-@@ -74,7 +74,7 @@ exports.LICENSE_RESULT = {
+@@ -75,7 +75,7 @@ exports.LICENSE_RESULT = {
    ExpiredLimited: 11
  };
  
@@ -12,10 +12,10 @@ index a6b553b..336d069 100644
  
  exports.AVS_OFFICESTUDIO_FILE_UNKNOWN =  0x0000;
 diff --git a/Common/sources/license.js b/Common/sources/license.js
-index 3f84ab7..06572af 100644
+index c273afe..8786f62 100644
 --- a/Common/sources/license.js
 +++ b/Common/sources/license.js
-@@ -45,19 +45,19 @@ exports.readLicense = function*() {
+@@ -45,20 +45,20 @@ exports.readLicense = function*() {
  		count: 1,
  		type: c_LR.Success,
  		light: false,
@@ -36,7 +36,9 @@ index 3f84ab7..06572af 100644
 +		plugins: true,
  		buildDate: oBuildDate,
  		startDate: startDate,
--		endDate: null
+-		endDate: null,
+-		customerId: ""
++		customerId: "",
 +		endDate: new Date("2099-01-01T23:59:59.000Z")
  	}, null];
  };
@@ -44,10 +46,10 @@ index 3f84ab7..06572af 100644
 -exports.packageType = constants.PACKAGE_TYPE_OS;
 +exports.packageType = constants.PACKAGE_TYPE_I;
 diff --git a/DocService/sources/DocsCoServer.js b/DocService/sources/DocsCoServer.js
-index 8e56486..161be23 100644
+index b654c9c..31bdf2d 100644
 --- a/DocService/sources/DocsCoServer.js
 +++ b/DocService/sources/DocsCoServer.js
-@@ -166,7 +166,7 @@ let connections = []; // Активные соединения
+@@ -165,7 +165,7 @@ let connections = []; // Активные соединения
  let lockDocumentsTimerId = {};//to drop connection that can't unlockDocument
  let pubsub;
  let queue;
@@ -56,7 +58,7 @@ index 8e56486..161be23 100644
  let licenseOriginal = null;
  let shutdownFlag = false;
  let expDocumentsStep = gc.getCronStep(cfgExpDocumentsCron);
-@@ -3259,7 +3259,7 @@ exports.install = function(server, callbackFunction) {
+@@ -3328,7 +3328,7 @@ exports.install = function(server, callbackFunction) {
    });
  };
  exports.setLicenseInfo = function(data, original ) {
@@ -66,10 +68,10 @@ index 8e56486..161be23 100644
  };
  exports.getLicenseInfo = function() {
 diff --git a/DocService/sources/server.js b/DocService/sources/server.js
-index b03e0d0..91e61c2 100644
+index ccc232b..7c4e80d 100644
 --- a/DocService/sources/server.js
 +++ b/DocService/sources/server.js
-@@ -137,7 +137,6 @@ try {
+@@ -147,7 +147,6 @@ try {
  } catch (e) {
  	logger.warn('Failed to subscribe to plugin folder updates. When changing the list of plugins, you must restart the server. https://nodejs.org/docs/latest/api/fs.html#fs_availability');
  }
