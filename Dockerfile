@@ -13,7 +13,7 @@ ENV BUILD_NUMBER=${build_number}
 
 ARG build_deps="git make g++ nodejs npm"
 RUN apt-get update && apt-get install -y ${build_deps}
-RUN npm install -g pkg grunt
+RUN npm install -g pkg grunt grunt-cli
 
 WORKDIR /build
 
@@ -29,7 +29,13 @@ RUN git clone --quiet --branch $tag --depth 1 https://github.com/ONLYOFFICE/serv
 COPY server.patch /build/server.patch
 RUN cd /build/server   && git apply /build/server.patch
 
+# Clone old version of sdk and webapp to get an old version of the mobile editor
 
+ARG tag=v6.3.1.32 # Working mobile editor
+RUN git clone --quiet --branch $tag --depth 1 https://github.com/ONLYOFFICE/sdkjs.git       /build/sdkjs
+RUN git clone --quiet --branch $tag --depth 1 https://github.com/ONLYOFFICE/web-apps.git    /build/web-apps
+COPY web-apps.patch /build/
+RUN cd /build/web-apps && git apply /build/web-apps.patch
 
 ## Build
 FROM clone-stage as build-stage
@@ -40,6 +46,10 @@ RUN make
 RUN pkg /build/build_tools/out/linux_64/onlyoffice/documentserver/server/FileConverter --targets=node14-linux -o /build/converter
 RUN pkg /build/build_tools/out/linux_64/onlyoffice/documentserver/server/DocService --targets=node14-linux --options max_old_space_size=4096 -o /build/docservice
 
+# build web-apps with mobile editing
+WORKDIR /build/web-apps/build
+RUN npm install
+RUN grunt
 
 ## Final image
 FROM onlyoffice/documentserver:${product_version}.${build_number}
@@ -49,9 +59,7 @@ ARG oo_root
 COPY --from=build-stage /build/converter  ${oo_root}/server/FileConverter/converter
 COPY --from=build-stage /build/docservice ${oo_root}/server/DocService/docservice
 
-# Restore basic editing on mobile (no editing menu/features).
-RUN sed -si \
-  's/isSupportEditFeature=function(){return!1}/isSupportEditFeature=function(){return 1}/g' \
-  ${oo_root}/web-apps/apps/documenteditor/mobile/dist/js/app.js \
-  ${oo_root}/web-apps/apps/presentationeditor/mobile/dist/js/app.js \
-  ${oo_root}/web-apps/apps/spreadsheeteditor/mobile/dist/js/app.js
+# Restore mobile editing using an old version of mobile editor
+COPY --from=build-stage /build/web-apps/deploy/web-apps/apps/documenteditor/mobile     ${oo_root}/web-apps/apps/documenteditor/mobile
+COPY --from=build-stage /build/web-apps/deploy/web-apps/apps/presentationeditor/mobile ${oo_root}/web-apps/apps/presentationeditor/mobile
+COPY --from=build-stage /build/web-apps/deploy/web-apps/apps/spreadsheeteditor/mobile  ${oo_root}/web-apps/apps/spreadsheeteditor/mobile
