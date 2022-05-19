@@ -31,7 +31,7 @@ RUN cd /build/server   && git apply /build/server.patch
 
 # Clone old version of sdk and webapp to get an old version of the mobile editor
 
-ARG tag=v6.3.1.32 # Working mobile editor
+ARG tag=v6.3.1.79 # Working mobile editor
 RUN git clone --quiet --branch $tag --depth 1 https://github.com/ONLYOFFICE/sdkjs.git       /build/sdkjs
 RUN git clone --quiet --branch $tag --depth 1 https://github.com/ONLYOFFICE/web-apps.git    /build/web-apps
 COPY web-apps.patch /build/
