@@ -1,5 +1,5 @@
-ARG product_version=7.1.0
-ARG build_number=215
+ARG product_version=7.1.1
+ARG build_number=23
 ARG oo_root='/var/www/onlyoffice/documentserver'
 
 ## Setup
@@ -26,16 +26,19 @@ ARG tag=v${PRODUCT_VERSION}.${BUILD_NUMBER}
 RUN git clone --quiet --branch $tag --depth 1 https://github.com/ONLYOFFICE/build_tools.git /build/build_tools
 RUN git clone --quiet --branch $tag --depth 1 https://github.com/ONLYOFFICE/server.git      /build/server
 
+# Working mobile editor
+RUN git clone --quiet --depth 1 https://github.com/ONLYOFFICE/sdkjs.git       /build/sdkjs
+RUN git clone --quiet --depth 1 https://github.com/ONLYOFFICE/web-apps.git    /build/web-apps
+
+## Build
+FROM clone-stage as build-stage
+
+# patch
 COPY server.patch /build/server.patch
 RUN cd /build/server   && git apply /build/server.patch
 
-# Clone old version of sdk and webapp to get an old version of the mobile editor
+RUN sudo sed -i s/false/true/g /build/web-apps/apps/documenteditor/mobile/src/lib/patch.jsx
 
-ARG tag=v6.3.1.79 # Working mobile editor
-RUN git clone --quiet --branch $tag --depth 1 https://github.com/ONLYOFFICE/sdkjs.git       /build/sdkjs
-RUN git clone --quiet --branch $tag --depth 1 https://github.com/ONLYOFFICE/web-apps.git    /build/web-apps
-COPY web-apps.patch /build/
-RUN cd /build/web-apps && git apply /build/web-apps.patch
 
 ## Build
 FROM clone-stage as build-stage
