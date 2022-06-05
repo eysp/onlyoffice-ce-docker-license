@@ -17,8 +17,6 @@ RUN npm install -g pkg grunt grunt-cli
 
 WORKDIR /build
 
-
-
 ## Clone
 FROM setup-stage as clone-stage
 ARG tag=v${PRODUCT_VERSION}.${BUILD_NUMBER}
@@ -31,7 +29,7 @@ RUN git clone --quiet --depth 1 https://github.com/ONLYOFFICE/sdkjs.git       /b
 RUN git clone --quiet --depth 1 https://github.com/ONLYOFFICE/web-apps.git    /build/web-apps
 
 ## Build
-FROM clone-stage as build-stage
+FROM clone-stage as patch-stage
 
 # patch
 COPY server.patch /build/server.patch
@@ -41,7 +39,7 @@ RUN sudo sed -i s/false/true/g /build/web-apps/apps/documenteditor/mobile/src/li
 
 
 ## Build
-FROM clone-stage as build-stage
+FROM patch-stage as build-stage
 
 # build server with license checks patched
 WORKDIR /build/server
