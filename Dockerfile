@@ -17,6 +17,8 @@ RUN npm install -g pkg grunt grunt-cli
 
 WORKDIR /build
 
+
+
 ## Clone
 FROM setup-stage as clone-stage
 ARG tag=v${PRODUCT_VERSION}.${BUILD_NUMBER}
@@ -24,22 +26,19 @@ ARG tag=v${PRODUCT_VERSION}.${BUILD_NUMBER}
 RUN git clone --quiet --branch $tag --depth 1 https://github.com/ONLYOFFICE/build_tools.git /build/build_tools
 RUN git clone --quiet --branch $tag --depth 1 https://github.com/ONLYOFFICE/server.git      /build/server
 
-# Working mobile editor
-RUN git clone --quiet --depth 1 https://github.com/ONLYOFFICE/sdkjs.git       /build/sdkjs
-RUN git clone --quiet --depth 1 https://github.com/ONLYOFFICE/web-apps.git    /build/web-apps
-
-## Build
-FROM clone-stage as patch-stage
-
-# patch
 COPY server.patch /build/server.patch
 RUN cd /build/server   && git apply /build/server.patch
 
-RUN sudo sed -i s/false/true/g /build/web-apps/apps/documenteditor/mobile/src/lib/patch.jsx
+# Clone old version of sdk and webapp to get an old version of the mobile editor
 
+ARG tag=v6.3.1.79 # Working mobile editor
+RUN git clone --quiet --branch $tag --depth 1 https://github.com/ONLYOFFICE/sdkjs.git       /build/sdkjs
+RUN git clone --quiet --branch $tag --depth 1 https://github.com/ONLYOFFICE/web-apps.git    /build/web-apps
+COPY web-apps.patch /build/
+RUN cd /build/web-apps && git apply /build/web-apps.patch
 
 ## Build
-FROM patch-stage as build-stage
+FROM clone-stage as build-stage
 
 # build server with license checks patched
 WORKDIR /build/server
