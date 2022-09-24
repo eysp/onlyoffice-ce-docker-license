@@ -68,7 +68,6 @@ index cf3ba90..d256724 100644
  if (!tenantManager.isMultitenantMode()) {
  	updateLicense();
 -	fs.watchFile(cfgLicenseFile, updateLicense);
-+	
  	setInterval(updateLicense, 86400000);
  }
  
