@@ -21,4 +21,5 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: xbeeant/oo-unlimit
-        tags: latest
+        tags: latest, 7.2.0.204
+
