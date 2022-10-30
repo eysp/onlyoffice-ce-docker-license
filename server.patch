@@ -113,7 +113,7 @@ index e8e1308..a4b0a51 100644
  
  .NOTPARALLEL:
 -all: $(SPELLCHECKER_DICTIONARIES) $(TOOLS) $(SCHEMA) $(CORE_FONTS) $(DOCUMENT_TEMPLATES) $(LICENSE) $(WELCOME) $(INFO) build-date
-+all: $(SPELLCHECKER_DICTIONARIES) $(TOOLS) $(SCHEMA) $(CORE_FONTS) $(DOCUMENT_TEMPLATES) $(WELCOME) $(INFO) build-date
++all: $(SCHEMA) $(LICENSE) $(WELCOME) $(INFO) build-date
  
  build-date: $(GRUNT_FILES)
  	sed "s|\(const buildVersion = \).*|\1'${PRODUCT_VERSION}';|" -i $(COMMON_DEFINES_JS)
