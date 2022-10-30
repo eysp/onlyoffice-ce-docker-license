@@ -4,8 +4,8 @@ Date: Sun, 30 Oct 2022 14:32:03 +0800
 Subject: [PATCH] license
 
 ---
- Common/sources/constants.js              |  2 +-
- Common/sources/license.js                | 22 +++++++++++-----------
+ Common/sources/constants.js |  2 +-
+ Common/sources/license.js   | 24 ++++++++++++------------
  DocService/sources/DocsCoServer.js       |  2 +-
  DocService/sources/server.js             |  4 ++--
  FileConverter/sources/convertermaster.js |  2 +-
@@ -13,7 +13,7 @@ Subject: [PATCH] license
  6 files changed, 18 insertions(+), 17 deletions(-)
 
 diff --git a/Common/sources/constants.js b/Common/sources/constants.js
-index 65d4c6f..73b6110 100644
+index 65d4c6f..df96adb 100644
 --- a/Common/sources/constants.js
 +++ b/Common/sources/constants.js
 @@ -83,7 +83,7 @@ exports.LICENSE_RESULT = {
@@ -21,46 +21,48 @@ index 65d4c6f..73b6110 100644
  };
  
 -exports.LICENSE_CONNECTIONS = 20;
-+exports.LICENSE_CONNECTIONS = 99990;
++exports.LICENSE_CONNECTIONS = 99999;
  exports.LICENSE_EXPIRE_USERS_ONE_DAY = 24 * 60 * 60; // day in seconds
  
  exports.AVS_OFFICESTUDIO_FILE_UNKNOWN =  0x0000;
 diff --git a/Common/sources/license.js b/Common/sources/license.js
-index 1b617c6..fc72302 100644
+index 1b617c6..574eb78 100644
 --- a/Common/sources/license.js
 +++ b/Common/sources/license.js
-@@ -45,24 +45,24 @@ exports.readLicense = function*() {
-      count: 1,
-      type: c_LR.Success,
-      light: false,
--     packageType: constants.PACKAGE_TYPE_OS,
-+     packageType: constants.PACKAGE_TYPE_I,
-      mode: constants.LICENSE_MODE.None,
--     branding: false,
-+     branding: true,
-      connections: constants.LICENSE_CONNECTIONS,
-      connectionsView: constants.LICENSE_CONNECTIONS,
--     customization: false,
--     advancedApi: false,
--     usersCount: 0,
--     usersViewCount: 0,
-+     customization: true,
-+     advancedApi: true,
-+     usersCount: constants.LICENSE_CONNECTIONS,
-+     usersViewCount: constants.LICENSE_CONNECTIONS,
-      usersExpire: constants.LICENSE_EXPIRE_USERS_ONE_DAY,
--     hasLicense: false,
--     plugins: false,
-+     hasLicense: true,
-+     plugins: true,
-      buildDate: oBuildDate,
-      startDate: startDate,
--     endDate: null,
-+     endDate: new Date("2099-01-01T23:59:59.000Z"),
-      customerId: "",
--     alias: ""
-+     alias: "community"
-   }, null];
+@@ -44,25 +44,25 @@ exports.readLicense = function*() {
+ 	return [{
+ 		count: 1,
+ 		type: c_LR.Success,
+-		light: false,
+-		packageType: constants.PACKAGE_TYPE_OS,
++		light: true,
++		packageType: constants.PACKAGE_TYPE_I,
+ 		mode: constants.LICENSE_MODE.None,
+-		branding: false,
++		branding: true,
+ 		connections: constants.LICENSE_CONNECTIONS,
+ 		connectionsView: constants.LICENSE_CONNECTIONS,
+-		customization: false,
+-		advancedApi: false,
+-		usersCount: 0,
+-		usersViewCount: 0,
++		customization: true,
++		advancedApi: true,
++		usersCount: constants.LICENSE_CONNECTIONS,
++		usersViewCount: constants.LICENSE_CONNECTIONS,
+ 		usersExpire: constants.LICENSE_EXPIRE_USERS_ONE_DAY,
+-		hasLicense: false,
+-		plugins: false,
++		hasLicense: true,
++		plugins: true,
+ 		buildDate: oBuildDate,
+ 		startDate: startDate,
+-		endDate: null,
++		endDate: new Date("2099-01-01T23:59:59.000Z"),
+ 		customerId: "",
+-		alias: ""
++		alias: "community"
+ 	}, null];
  };
  
 -exports.packageType = constants.PACKAGE_TYPE_OS;
