@@ -5,6 +5,7 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
 
@@ -15,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag xbeeant/oo-unlimit:$(date +%s)
+      run: docker build . --file Dockerfile --tag xbeeant/oo-unlimit:7.2.1.34
     - name: Login to DockerHub
       uses: docker/login-action@v2.0.0
       with:
@@ -28,6 +29,4 @@ jobs:
         context: ./
         # Note: tags has to be all lower-case
         tags: |
-          xbeeant/devdocs:latest
-        # build on feature branches, push only on main branch
-        push: ${{ github.ref == 'refs/heads/main' }}
+          xbeeant/oo-unlimit:7.2.1.34
