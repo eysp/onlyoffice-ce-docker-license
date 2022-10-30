@@ -1,16 +1,14 @@
-From 2187e7223797956bd18c8fa7432f633c4cf782cc Mon Sep 17 00:00:00 2001
-From: Beeant <huangxb0512@gmail.com>
-Date: Sun, 30 Oct 2022 14:32:03 +0800
+From a14a56ecf23bbccc92167f53aae7a0a5f8407b1c Mon Sep 17 00:00:00 2001
+From: xbeeant <huangxb0512@gmail.com>
+Date: Sun, 30 Oct 2022 15:40:54 +0800
 Subject: [PATCH] license
 
 ---
- Common/sources/constants.js |  2 +-
- Common/sources/license.js   | 24 ++++++++++++------------
- DocService/sources/DocsCoServer.js       |  2 +-
- DocService/sources/server.js             |  4 ++--
+ Common/sources/constants.js              |  2 +-
+ Common/sources/license.js                | 24 ++++++++++++------------
+ DocService/sources/server.js             |  2 +-
  FileConverter/sources/convertermaster.js |  2 +-
- Makefile                                 |  3 ++-
- 6 files changed, 18 insertions(+), 17 deletions(-)
+ 4 files changed, 15 insertions(+), 15 deletions(-)
 
 diff --git a/Common/sources/constants.js b/Common/sources/constants.js
 index 65d4c6f..df96adb 100644
@@ -67,32 +65,17 @@ index 1b617c6..574eb78 100644
  
 -exports.packageType = constants.PACKAGE_TYPE_OS;
 +exports.packageType = constants.PACKAGE_TYPE_I;
-diff --git a/DocService/sources/DocsCoServer.js b/DocService/sources/DocsCoServer.js
-index 025b5ae..d027d1e 100644
---- a/DocService/sources/DocsCoServer.js
-+++ b/DocService/sources/DocsCoServer.js
-@@ -164,7 +164,7 @@ let connections = []; // Активные соединения
- let lockDocumentsTimerId = {};//to drop connection that can't unlockDocument
- let pubsub;
- let queue;
--let f = {type: constants.LICENSE_RESULT.Error, light: false, branding: false, customization: false, plugins: false};
-+let f = {type: constants.LICENSE_RESULT.Success, light: false, branding: true, customization: true, plugins: true};
- let shutdownFlag = false;
- let expDocumentsStep = gc.getCronStep(cfgExpDocumentsCron);
- 
 diff --git a/DocService/sources/server.js b/DocService/sources/server.js
-index 5c744f6..f027301 100644
+index 5c744f6..bd84b94 100644
 --- a/DocService/sources/server.js
 +++ b/DocService/sources/server.js
-@@ -109,8 +109,8 @@ if (!(cfgTokenEnableBrowser && cfgTokenEnableRequestInbox && cfgTokenEnableReque
- }
+@@ -110,7 +110,7 @@ if (!(cfgTokenEnableBrowser && cfgTokenEnableRequestInbox && cfgTokenEnableReque
  
  if (!tenantManager.isMultitenantMode()) {
--  updateLicense();
--  fs.watchFile(cfgLicenseFile, updateLicense);
-+  // updateLicense();
-+  // fs.watchFile(cfgLicenseFile, updateLicense);
-   setInterval(updateLicense, 86400000);
+ 	updateLicense();
+-	fs.watchFile(cfgLicenseFile, updateLicense);
++	// fs.watchFile(cfgLicenseFile, updateLicense);
+ 	setInterval(updateLicense, 86400000);
  }
  
 diff --git a/FileConverter/sources/convertermaster.js b/FileConverter/sources/convertermaster.js
@@ -108,20 +91,6 @@ index 2a0b366..a11e4ae 100644
      setInterval(updateLicense, 86400000);
    }
  } else {
-diff --git a/Makefile b/Makefile
-index e8e1308..e305660 100644
---- a/Makefile
-+++ b/Makefile
-@@ -87,7 +87,8 @@ DEBUG = $(BRANDING_DIR)/debug.js
- .PHONY: all clean install uninstall build-date
- 
- .NOTPARALLEL:
--all: $(SPELLCHECKER_DICTIONARIES) $(TOOLS) $(SCHEMA) $(CORE_FONTS) $(DOCUMENT_TEMPLATES) $(LICENSE) $(WELCOME) $(INFO) build-date
-+# all: $(SPELLCHECKER_DICTIONARIES) $(TOOLS) $(SCHEMA) $(CORE_FONTS) $(DOCUMENT_TEMPLATES) $(LICENSE) $(WELCOME) $(INFO) build-date
-+all: $(SCHEMA) $(LICENSE) $(WELCOME) $(INFO) build-date
- 
- build-date: $(GRUNT_FILES)
-   sed "s|\(const buildVersion = \).*|\1'${PRODUCT_VERSION}';|" -i $(COMMON_DEFINES_JS)
 -- 
-2.31.1.windows.1
+2.36.1.windows.1
 
