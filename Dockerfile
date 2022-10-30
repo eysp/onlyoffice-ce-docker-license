@@ -1,5 +1,5 @@
-ARG product_version=7.2.0
-ARG build_number=204
+ARG product_version=7.2.1
+ARG build_number=34
 ARG oo_root='/var/www/onlyoffice/documentserver'
 
 ## Setup
@@ -26,19 +26,24 @@ ARG tag=v${PRODUCT_VERSION}.${BUILD_NUMBER}
 RUN git clone --quiet --branch $tag --depth 1 https://github.com/ONLYOFFICE/build_tools.git /build/build_tools
 RUN git clone --quiet --branch $tag --depth 1 https://github.com/ONLYOFFICE/server.git      /build/server
 
-COPY server.patch /build/server.patch
-RUN cd /build/server   && git apply /build/server.patch
-
-# Clone old version of sdk and webapp to get an old version of the mobile editor
-
-ARG tag=v6.3.1.79 # Working mobile editor
-RUN git clone --quiet --branch $tag --depth 1 https://github.com/ONLYOFFICE/sdkjs.git       /build/sdkjs
-RUN git clone --quiet --branch $tag --depth 1 https://github.com/ONLYOFFICE/web-apps.git    /build/web-apps
-COPY web-apps.patch /build/
-RUN cd /build/web-apps && git apply /build/web-apps.patch
+# Working mobile editor
+RUN git clone --quiet --depth 1 https://github.com/ONLYOFFICE/sdkjs.git       /build/sdkjs
+RUN git clone --quiet --depth 1 https://github.com/ONLYOFFICE/web-apps.git    /build/web-apps
 
 ## Build
-FROM clone-stage as build-stage
+FROM clone-stage as path-stage
+
+# patch
+COPY web-apps.patch /build/web-apps.patch
+RUN cd /build/web-apps   && git apply /build/web-apps.patch
+COPY convertermaster.js /build/server/FileConverter/sources/convertermaster.js
+COPY license.js /build/server/Common/sources/license.js
+COPY Makefile /build/server/Makefile
+COPY server.js /build/server/DocService/sources/server.js
+COPY constants.js /build/server/Common/srouces/constants.js
+
+## Build
+FROM path-stage as build-stage
 
 # build server with license checks patched
 WORKDIR /build/server
