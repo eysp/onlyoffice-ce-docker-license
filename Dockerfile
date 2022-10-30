@@ -31,17 +31,16 @@ RUN git clone --quiet --depth 1 https://github.com/ONLYOFFICE/sdkjs.git       /b
 RUN git clone --quiet --depth 1 https://github.com/ONLYOFFICE/web-apps.git    /build/web-apps
 
 ## Build
-FROM clone-stage as build-stage
+FROM clone-stage as path-stage
 
 # patch
 COPY server.patch /build/server.patch
+COPY web-apps.patch /build/web-apps.patch
 RUN cd /build/server   && git apply /build/server.patch
-
-RUN sudo sed -i s/false/true/g /build/web-apps/apps/documenteditor/mobile/src/lib/patch.jsx
-
+RUN cd /build/web-apps   && git apply /build/web-apps.patch
 
 ## Build
-FROM clone-stage as build-stage
+FROM path-stage as build-stage
 
 # build server with license checks patched
 WORKDIR /build/server
