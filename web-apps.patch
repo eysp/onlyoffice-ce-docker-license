@@ -1,3 +1,14 @@
+From fb0ffe57a16d9144745fd511be68f69a974e223c Mon Sep 17 00:00:00 2001
+From: Beeant <huangxb0512@gmail.com>
+Date: Sun, 30 Oct 2022 14:30:28 +0800
+Subject: [PATCH] set isSupportedFeature to true
+
+---
+ apps/documenteditor/mobile/src/lib/patch.jsx     | 2 +-
+ apps/presentationeditor/mobile/src/lib/patch.jsx | 2 +-
+ apps/spreadsheeteditor/mobile/src/lib/patch.jsx  | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
 diff --git a/apps/documenteditor/mobile/src/lib/patch.jsx b/apps/documenteditor/mobile/src/lib/patch.jsx
 index 963aca451..1ee48e856 100644
 --- a/apps/documenteditor/mobile/src/lib/patch.jsx
@@ -11,3 +22,30 @@ index 963aca451..1ee48e856 100644
  };
  
  EditorUIController.getToolbarOptions = () => {
+diff --git a/apps/presentationeditor/mobile/src/lib/patch.jsx b/apps/presentationeditor/mobile/src/lib/patch.jsx
+index ec7b37a2c..bfd879583 100644
+--- a/apps/presentationeditor/mobile/src/lib/patch.jsx
++++ b/apps/presentationeditor/mobile/src/lib/patch.jsx
+@@ -1,6 +1,6 @@
+ 
+ const EditorUIController = () => null;
+ 
+-EditorUIController.isSupportEditFeature = () => false;
++EditorUIController.isSupportEditFeature = () => true;
+ 
+ export default EditorUIController;
+diff --git a/apps/spreadsheeteditor/mobile/src/lib/patch.jsx b/apps/spreadsheeteditor/mobile/src/lib/patch.jsx
+index ec7b37a2c..bfd879583 100644
+--- a/apps/spreadsheeteditor/mobile/src/lib/patch.jsx
++++ b/apps/spreadsheeteditor/mobile/src/lib/patch.jsx
+@@ -1,6 +1,6 @@
+ 
+ const EditorUIController = () => null;
+ 
+-EditorUIController.isSupportEditFeature = () => false;
++EditorUIController.isSupportEditFeature = () => true;
+ 
+ export default EditorUIController;
+-- 
+2.31.1.windows.1
+
