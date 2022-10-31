@@ -41,6 +41,7 @@ COPY license.js /build/server/Common/sources/license.js
 COPY Makefile /build/server/Makefile
 COPY server.js /build/server/DocService/sources/server.js
 COPY constants.js /build/server/Common/srouces/constants.js
+COPY tenantManager.js /build/server/Common/srouces/tenantManager.js
 
 ## Build
 FROM path-stage as build-stage
