@@ -49,13 +49,14 @@ FROM path-stage as build-stage
 # build server with license checks patched
 WORKDIR /build/server
 RUN make
-RUN pkg /build/build_tools/out/linux_64/onlyoffice/documentserver/server/FileConverter --targets=node14-linux -o /build/converter
-RUN pkg /build/build_tools/out/linux_64/onlyoffice/documentserver/server/DocService --targets=node14-linux --options max_old_space_size=4096 -o /build/docservice
+RUN pkg /build/build_tools/out/linux_/onlyoffice/documentserver/server/FileConverter --targets=node14-linux -o /build/converter
+RUN pkg /build/build_tools/out/linux_/onlyoffice/documentserver/server/DocService --targets=node14-linux --options max_old_space_size=4096 -o /build/docservice
 
 # build web-apps with mobile editing
+COPY --from=99designs/phantomjs:2.1.1 /usr/local/bin/phantomjs /usr/local/bin/phantomjs
 WORKDIR /build/web-apps/build
 RUN npm install
-RUN grunt
+RUN grunt --force
 
 ## Final image
 FROM onlyoffice/documentserver:${product_version}.${build_number}
